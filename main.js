@@ -112,6 +112,7 @@
 
   //   開始前
   let showInfo = true;
+  let screen = 1;
 
   /**
    * constant
@@ -802,6 +803,7 @@
     //   context.fillText("Restart", 0, 10);
     context.fillText("按空白鍵開始", STAGE_WIDTH / 2, STAGE_HEIGHT - 75);
   }
+
   function drawAll(context, time) {
     context.save();
     context.beginPath();
@@ -837,74 +839,59 @@
     context.font = "18pt 'Auraka點陣宋'";
     context.fillText(
       "Life: " + "oooooooooo----------".substr(10 - hero.life, 10),
-      30,
+      120,
       64
     );
-    context.fillText("Score: " + score, 30, 94);
+    context.fillText("Score: " + score, 70, 94);
 
     if (!isRunning) {
-      context.save();
-      context.translate(STAGE_WIDTH * 0.5, STAGE_HEIGHT * 0.5);
-      if (isCooldownTime) {
-        if (judge()) {
-        }
+      if (screen === 1) {
+        showInfor($ctx);
       } else {
-        if (!isFinite(spacePressed)) {
-          context.beginPath();
-        }
-        if (judge()) {
-          context.beginPath();
-          roundRect(context, -109.5, 19.5, 219, 59, 10);
-          context.fillStyle = "rgba(0, 0, 0, 0.5)";
-          context.fill();
-          context.translate(-5, -5);
-          roundRect(context, -109.5, 19.5, 219, 59, 10);
-          context.fillStyle = "#fff";
-          context.fill();
-          context.fillStyle = "#000";
-          context.font = "bold 24pt 'Auraka點陣宋'";
-          context.textAlign = "center";
-          context.fillText("按空白鍵重玩", 0, 60);
+        context.save();
+        context.translate(STAGE_WIDTH * 0.5, STAGE_HEIGHT * 0.5);
+        if (!isCooldownTime) {
+          if (!isFinite(spacePressed)) {
+            context.beginPath();
+          }
 
-          context.textAlign = "center";
-          context.font = "bold 32pt 'Auraka點陣宋'";
-          context.strokeStyle = "#fff";
-          context.lineWidth = 6;
-          context.strokeText("Game Over!", 0, 0);
-          context.fillStyle = "#000";
-          context.fillText("Game Over!", 0, 0);
-        } else {
-          context.textAlign = "center";
-          context.font = "bold 32pt 'Auraka點陣宋'";
-          context.strokeStyle = "#fff";
-          context.lineWidth = 6;
-          context.strokeText("Success!", 0, 10);
-          context.fillStyle = "#000";
-          context.fillText("Success!", 0, 10);
+          if (judge()) {
+            context.beginPath();
+            roundRect(context, -109.5, 19.5, 219, 59, 10);
+            context.fillStyle = "rgba(0, 0, 0, 0.5)";
+            context.fill();
+            context.translate(-5, -5);
+            roundRect(context, -109.5, 19.5, 219, 59, 10);
+            context.fillStyle = "#fff";
+            context.fill();
+            context.fillStyle = "#000";
+            context.font = "bold 24pt 'Auraka點陣宋'";
+            context.textAlign = "center";
+            context.fillText("按空白鍵重玩", 0, 60);
+
+            context.textAlign = "center";
+            context.font = "bold 32pt 'Auraka點陣宋'";
+            context.strokeStyle = "#fff";
+            context.lineWidth = 6;
+            context.strokeText("Game Over!", 0, 0);
+            context.fillStyle = "#000";
+            context.fillText("Game Over!", 0, 0);
+          } else {
+            console.log("ooooo");
+            context.textAlign = "center";
+            context.font = "bold 32pt 'Auraka點陣宋'";
+            context.strokeStyle = "#fff";
+            context.lineWidth = 6;
+            context.strokeText("Success!", 0, 10);
+            context.fillStyle = "#000";
+            context.fillText("Success!", 0, 10);
+          }
         }
       }
       context.restore();
     }
 
     context.restore();
-
-    //血條
-    // if (topBarChange) {
-    //   topBarChange = false;
-    //   context.save();
-    //   context.clearRect(0, 0, STAGE_WIDTH, MARGIN_TOP);
-    //   context.fillStyle = "#c41200";
-    //   context.font = "12pt 'Auraka點陣宋'";
-    //   context.fillText(
-    //     "life: " +
-    //       "oooooooooo----------".substr(10 - hero.life, 10) +
-    //       "  score: " +
-    //       score,
-    //     10,
-    //     24
-    //   );
-    //   context.restore();
-    // }
 
     if (window.DEBUG) {
       context.save();
@@ -1098,11 +1085,14 @@
           e.preventDefault();
           e.stopPropagation();
         } else if (e.keyCode == 32 || e.keyCode == 13) {
-          // space or enter
-          if (!isRunning && !isCooldownTime) {
-            spacePressed = 0;
-            drawAll($ctx, lastTime);
+          if (screen === 1) {
+            screen = 2;
           }
+          // space or enter
+          // if (!isRunning && !isCooldownTime) {
+          //   // spacePressed = 0;
+          //   // drawAll($ctx, lastTime);
+          // }
           e.preventDefault();
           e.stopPropagation();
         }
@@ -1127,8 +1117,9 @@
             hero.stay();
           }
         } else if (
-          isFinite(spacePressed) &&
-          (e.keyCode == 32 || e.keyCode == 13)
+          // isFinite(spacePressed) &&
+          e.keyCode == 32 ||
+          e.keyCode == 13
         ) {
           spacePressed = NaN;
           start();
@@ -1220,9 +1211,9 @@
   }
 
   function start() {
-    if (isRunning) {
-      return;
-    }
+    // if (isRunning) {
+    //   return;
+    // }
     if (judge()) {
       fireEvent("gameStart");
       //create world
@@ -1238,7 +1229,13 @@
       topBarChange = true;
     }
     window.removeEventListener("touchmove", onMove, false);
-    isRunning = true;
+
+    showInfor($ctx);
+    // console.log("ss");
+    if (screen === 2) {
+      isRunning = true;
+    }
+
     lastTime = 0;
     $canvas.scrollIntoView();
     requestAnimationFrame(frame);
