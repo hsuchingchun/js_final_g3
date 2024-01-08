@@ -1245,10 +1245,10 @@
     $wrap = $wrapNode;
     loadImage(
       {
-        bg: "bg3.png",
-        hero: "led.png",
-        EndFloor: "EndFloor.png",
-        info: "info.png",
+        bg: "./asset/bg3.png",
+        hero: "./asset/led.png",
+        EndFloor: "./asset/EndFloor.png",
+        info: "./asset/info.png",
       },
       init
     );
