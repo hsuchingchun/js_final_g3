@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'Auraka';
+  src: url(../Auraka.ttf) format('Auraka點陣宋');
+}
+body {
+  padding: 50px;
+  font: 14px "Auraka點陣宋", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
